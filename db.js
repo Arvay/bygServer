@@ -50,7 +50,7 @@ app.get('/api/getlistdetl20', function(req, res, next){
         return;
     }
     var start = (param.page - 1) * 20;
-    var sql = 'SELECT COUNT(*) FROM record; SELECT * FROM record limit ' + start + ',20';
+    var sql = 'SELECT COUNT(*) FROM userInfo; SELECT * FROM userInfo limit ' + start + ',20';
     pool.getConnection(function(err, connection) {
         if(err) throw err;
         connection.query(sql,function (err, results) {
