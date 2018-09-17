@@ -49,8 +49,8 @@ app.get('/api/getlistdetl20', function(req, res, next){
         res.end(JSON.stringify({msg:'请传参数page',status:'102'}));
         return;
     }
-    var start = (param.page - 1) * 20;
-    var sql = 'SELECT COUNT(*) FROM userInfo; SELECT * FROM userInfo limit ' + start + ',20';
+    var start = (param.page - 1) * 10;
+    var sql = 'SELECT COUNT(*) FROM userInfo; SELECT * FROM userInfo limit ' + start + ',10';
 
     conn.query(sql, (err, results) => {
         if (err){
@@ -58,7 +58,7 @@ app.get('/api/getlistdetl20', function(req, res, next){
         }else{
             // 计算总页数
             var allCount = results[0][0]['COUNT(*)'];
-            var allPage = parseInt(allCount)/20;
+            var allPage = parseInt(allCount)/10;
             var pageStr = allPage.toString();
             // 不能被整除
             if (pageStr.indexOf('.')>0) {
