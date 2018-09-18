@@ -29,13 +29,11 @@ app.get('/api/getlist', (req, res) => {
 //修改数据
 app.post('/api/updataUserInfo', (req, res) => {
     const sqlStr = 'UPDATE userInfo SET user_name = ?,user_phone = ? WHERE id = ?'
-    var modsqlparams = ['吕雪源l22e','26',5];
+    var modsqlparams = ['吕雪源l55e','226',5];
     console.log('进来了')
-    conn.query(sqlStr,modsqlparams,function (err,result) {
+    conn.query(sqlStr,modsqlparams,function (err,res) {
         if (err) return res.json({ code: 1, message: '修改失败', affextedRows: 0 })
-        if (results.length == 0)
-            return res.json({code: 1, message: '修改失败', affextedRows: 0})
-        res.json({ code: 0, data: results, affextedRows: results.affextedRows })
+        res.json({ code: 0, data: res, affextedRows: res.affextedRows })
     })
 })
 
