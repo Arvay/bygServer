@@ -31,14 +31,14 @@ app.post('/api/updataUserInfo', (req, res) => {
     const sqlStr = 'UPDATE userInfo SET user_name = ?,user_phone = ? WHERE id = ?'
     var modsqlparams = ['吕雪源l666e','26',5];
     console.log('进来了')
-    conn.query(sqlStr,modsqlparams, (err,res) => {
+    conn.query(sqlStr,modsqlparams, (err,results) => {
         if(err){
             console.log('err');
             return;
         }
         console.log('--------------------------------');
-        console.log(res);
-        res.json({ code: 0, message: '修改成功', data: res })
+        console.log(results);
+        res.json({ code: 0, message: '修改成功', data: results })
         console.log('--------------------------------');
     })
 })
