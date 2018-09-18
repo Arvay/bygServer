@@ -64,7 +64,7 @@ app.get('/api/getlistdetl20', function(req, res, next){
         return;
     }
     var start = (param.page - 1) * 10;
-    var sql = 'SELECT COUNT(*) FROM userInfo where is_del=0; SELECT * FROM userInfo where is_del=0 limit ' + start + ',10';
+    var sql = 'SELECT COUNT(*) FROM userInfo where is_del=0; SELECT * FROM userInfo where is_del='+ param.isDel +' limit ' + start + ',10';
 
     conn.query(sql, (err, results) => {
         if (err){
