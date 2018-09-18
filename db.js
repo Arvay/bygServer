@@ -30,7 +30,7 @@ app.get('/api/getlist', (req, res) => {
 app.post('/api/updataUserInfo', (req, res) => {
     const sqlStr = 'UPDATE userInfo SET user_name = ?,user_phone = ? WHERE id = ?'
     console.log(req)
-    conn.query(sqlStr,req.body, (err,results) => {
+    conn.query(sqlStr,req.query, (err,results) => {
         if(err){
             res.end(JSON.stringify({msg:'错误',code:'1',err:err}));
             return;
