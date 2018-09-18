@@ -26,21 +26,40 @@ app.get('/api/getlist', (req, res) => {
     })
 })
 
-//修改数据
-app.post('/api/updataUserInfo', (req, res) => {
-    const sqlStr = 'UPDATE userInfo SET user_name = ?,user_phone = ? WHERE id = ?'
-    var modsqlparams = ['吕雪源love','26',5];
-    console.log('进来了')
-    conn.query(sqlStr,modsqlparams,function (err,result) {
-        if(err){
-            console.log('err');
-            return;
+// //修改数据
+// app.post('/api/updataUserInfo', (req, res) => {
+//     const sqlStr = 'UPDATE userInfo SET user_name = ?,user_phone = ? WHERE id = ?'
+//     var modsqlparams = ['吕雪源love','26',5];
+//     console.log('进来了')
+//     conn.query(sqlStr,modsqlparams,function (err,result) {
+//         if(err){
+//             console.log('err');
+//             return;
+//         }
+//         console.log('--------------------------------');
+//         console.log(result);
+//         console.log('--------------------------------');
+//     })
+// })
+
+
+app.post('/api/updataUserInfo', function(req, res, next){
+    var param = '';
+    if (req.method == "POST") {
+        param = req.body;
+    } else{
+        param = req.query || req.params;
+    }
+    var sql = 'UPDATE userInfo SET user_name = ?,user_phone = ? WHERE id = ?';
+
+    conn.query(sql, param.user_name, param.user_phone, param.id, (err, results) => {
+        if (err){
+            throw err
+        }else{
+            res.end(JSON.stringify({msg:'操作成功',code:0,data:results}));
         }
-        console.log('--------------------------------');
-        console.log(result);
-        console.log('--------------------------------');
     })
-})
+});
 
 
 // 按条件获取
