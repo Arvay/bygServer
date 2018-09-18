@@ -29,9 +29,10 @@ app.get('/api/getlist', (req, res) => {
 //修改数据
 app.post('/api/updataUserInfo', (req, res) => {
     const sqlStr = 'UPDATE userInfo SET user_name = ?,user_phone = ? WHERE id = ?'
+    console.log(req.body)
     conn.query(sqlStr,req.body, (err,results) => {
         if(err){
-            console.log('err');
+            res.end(JSON.stringify({msg:'错误',code:'1',err:err}));
             return;
         }
         console.log('--------------------------------');
