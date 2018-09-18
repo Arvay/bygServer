@@ -26,6 +26,22 @@ app.get('/api/getlist', (req, res) => {
     })
 })
 
+//修改数据
+app.post('/api/updateUserInfo', (req, res) => {
+    const sqlStr = 'UPDATE userInfo SET user_name = ?,user_phone = ? WHERE id = ?'
+    var modsqlparams = ['吕雪源love','26',5];
+    conn.query(sqlStr,modsqlparams,function (err,result) {
+        if(err){
+            console.log('err');
+            return;
+        }
+        console.log('--------------------------------');
+        console.log(result);
+        console.log('--------------------------------');
+    })
+})
+
+
 // 按条件获取
 app.get('/api/getlistdetl', (req, res) => {
     const name = req.query.name
@@ -68,27 +84,6 @@ app.get('/api/getlistdetl20', function(req, res, next){
             res.end(JSON.stringify({msg:'操作成功',code:0,totalPages:allPage,currentPage:param.page,num:allCount,data:userList}));
         }
     })
-
-    // pool.getConnection(function(err, connection) {
-    //     if(err) throw err;
-    //     connection.query(sql,function (err, results) {
-    //         connection.release();
-    //         if (err){
-    //             throw err
-    //         }else{
-    //             // 计算总页数
-    //             var allCount = results[0][0]['COUNT(*)'];
-    //             var allPage = parseInt(allCount)/20;
-    //             var pageStr = allPage.toString();
-    //             // 不能被整除
-    //             if (pageStr.indexOf('.')>0) {
-    //                 allPage = parseInt(pageStr.split('.')[0]) + 1;
-    //             }
-    //             var userList = results[1];
-    //             res.end(JSON.stringify({msg:'操作成功',status:'100',totalPages:allPage,currentPage:param.page,data:userList}));
-    //         }
-    //     })
-    // })
 });
 
 // 添加数据
