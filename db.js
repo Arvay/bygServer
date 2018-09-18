@@ -32,13 +32,10 @@ app.post('/api/updataUserInfo', (req, res) => {
     var modsqlparams = ['吕雪源l22e','26',5];
     console.log('进来了')
     conn.query(sqlStr,modsqlparams,function (err,result) {
-        if(err){
-            console.log('err');
-            return;
-        }
-        console.log('--------------------------------');
-        console.log(result);
-        console.log('--------------------------------');
+        if (err) return res.json({ code: 1, message: '修改失败', affextedRows: 0 })
+        if (results.length == 0)
+            return res.json({code: 1, message: '修改失败', affextedRows: 0})
+        res.json({ code: 0, data: results, affextedRows: results.affextedRows })
     })
 })
 
