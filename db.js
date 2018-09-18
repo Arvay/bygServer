@@ -50,10 +50,11 @@ app.post('/api/updataUserInfo', function(req, res, next){
     } else{
         param = req.query || req.params;
     }
-    console.log(param)
+    var modsqlparams = {user_name: '多大的', user_phone: '123321', id: 5};
+    console.log(modsqlparams)
     var sql = 'UPDATE userInfo SET user_name = ?,user_phone = ? WHERE id = ?';
 
-    conn.query(sql, param, (err, results) => {
+    conn.query(sql, modsqlparams, (err, results) => {
         if (err){
             throw err
         }else{
