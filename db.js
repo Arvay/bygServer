@@ -78,6 +78,7 @@ app.get('/api/getlistdetl', (req, res) => {
 })
 
 app.get('/api/getlistdetl20', function(req, res, next){
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});//设置response编码为utf-8
     var param = '';
     if (req.method == "POST") {
         param = req.body;
