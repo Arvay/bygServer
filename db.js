@@ -66,9 +66,9 @@ app.get('/api/getlistdetl20', function(req, res, next){
     var start = (param.page - 1) * 10;
     const isDel = parseInt( param.isDel)
     console.log(param)
-    var sql = 'SELECT * from userInfo where is_del=0; SELECT * FROM userInfo limit ' + start + ',10';
+    var sql = 'SELECT * from userInfo where is_del=?; SELECT * FROM userInfo limit ' + start + ',10';
 
-    conn.query(sql, (err, results) => {
+    conn.query(sql, isDel, (err, results) => {
         if (err){
             throw err
         }else{
