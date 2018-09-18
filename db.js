@@ -38,7 +38,7 @@ app.post('/api/updataUserInfo', (req, res) => {
         }
         console.log('--------------------------------');
         console.log(res);
-        res.end({msg:'操作成功',code:0,data:res})
+        res.json({ code: 0, message: '修改成功', data: res })
         console.log('--------------------------------');
     })
 })
