@@ -52,7 +52,7 @@ app.post('/api/updataUserInfo', function(req, res, next){
     }
     var sql = 'UPDATE userInfo SET user_name = ?,user_phone = ? WHERE id = ?';
 
-    conn.query(sql, param.user_name, param.user_phone, param.id, (err, results) => {
+    conn.query(sql, param, (err, results) => {
         if (err){
             throw err
         }else{
