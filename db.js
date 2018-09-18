@@ -63,6 +63,7 @@ app.get('/api/getlistdetl20', function(req, res, next){
         res.end(JSON.stringify({msg:'请传参数page',status:'102'}));
         return;
     }
+    console.log(param)
     var start = (param.page - 1) * 10;
     var sql = 'SELECT COUNT(*) FROM userInfo where is_del= ' + param.isDel +'; SELECT * FROM userInfo limit ' + start + ',10';
 
