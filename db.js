@@ -29,7 +29,7 @@ app.get('/api/getlist', (req, res) => {
 //修改数据
 app.post('/api/updataUserInfo', (req, res) => {
     const sqlStr = 'UPDATE userInfo SET user_name = ?,user_phone = ? WHERE id = ?'
-    var modsqlparams = {user_name:'777', user_phone:'26', id:5};
+    var modsqlparams = [req.query.userName,req.query.userPhone,req.query.id];
     console.log('进来了')
     conn.query(sqlStr,modsqlparams, (err,results) => {
         if(err){
