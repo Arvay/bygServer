@@ -35,10 +35,7 @@ app.post('/api/updataUserInfo', (req, res) => {
             res.json({ code: 0, message: '错误', err: err})
             return;
         }
-        console.log('--------------------------------');
-        console.log(results);
         res.json({ code: 0, message: '修改成功', data: results })
-        console.log('--------------------------------');
     })
 })
 
@@ -67,7 +64,7 @@ app.get('/api/getlistdetl20', function(req, res, next){
         return;
     }
     var start = (param.page - 1) * 10;
-    var sql = 'SELECT COUNT(*) FROM userInfo; SELECT * FROM userInfo limit ' + start + ',10';
+    var sql = 'SELECT COUNT(*) FROM userInfo where is_del= ' + param.isDel +'; SELECT * FROM userInfo limit ' + start + ',10';
 
     conn.query(sql, (err, results) => {
         if (err){
