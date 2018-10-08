@@ -21,7 +21,7 @@ const conn = mysql.createConnection({
 app.get('/api/getlist', (req, res) => {
     const sqlStr = 'select * from userInfo '
     conn.query(sqlStr, (err, results) => {
-        if (err) return res.json({ code: 1, message: '资料不存在', affextedRows: 0 })
+        if (err) return res.json({ code: 1, message: '资料不存在111', affextedRows: 0 })
         res.json({ code: 0, data: results, affextedRows: results.affextedRows })
     })
 })
