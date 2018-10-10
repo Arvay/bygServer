@@ -5,9 +5,10 @@ const moment = require('moment')
 var cors = require('cors')
 app.use(cors())
 
+
 const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: false }))
-
+app.use(bodyParser.json())
 const mysql = require('mysql')
 const conn = mysql.createConnection({
     host: '104.245.42.25',
