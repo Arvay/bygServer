@@ -91,6 +91,9 @@ app.get('/api/getlistdetl20', function(req, res, next){
 app.post('/api/addcard', (req, res) => {
     const user = req.body
     user.seat = JSON.stringify(user.seat)
+    user.start_time = JSON.stringify(user.start_time)
+    user.train_type = JSON.stringify(user.train_type)
+    user.user_list = JSON.stringify(user.user_list)
     console.log(user)
     user.create_time = moment().format('YYYY-MM-DD HH:mm:ss')
     const sqlStr = 'insert into userInfo set ?'
