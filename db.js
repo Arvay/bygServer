@@ -82,6 +82,11 @@ app.get('/api/getlistdetl20', function(req, res, next){
                 allPage = parseInt(pageStr.split('.')[0]) + 1;
             }
             var userList = results[1];
+            for (val of userList) {
+                if (val.seat) {
+                    val.seat = JSON.parse(val.seat)
+                }
+            }
             res.end(JSON.stringify({msg:'操作成功！',code:0,totalPages:allPage,currentPage:param.page,num:allCount,data:userList}));
         }
     })
