@@ -82,9 +82,9 @@ app.get('/api/getlistdetl20', function(req, res, next){
                 allPage = parseInt(pageStr.split('.')[0]) + 1;
             }
             var userList = results[1];
-            for (index of userList) {
+            for (val of userList) {
                 if (index.seat) {
-                    index.seat = JSON.parse(val.seat)
+                    index.seat = JSON.parse(index.seat)
                 }
                 if (index.start_time) {
                     index.start_time = JSON.parse(index.start_time)
