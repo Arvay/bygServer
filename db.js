@@ -66,7 +66,6 @@ app.get('/api/getlistdetl20', function(req, res, next){
     }
     var start = (param.page - 1) * 10;
     var isDel = parseInt(param.isDel)
-    console.log(param)
     var sql = 'SELECT COUNT(*) FROM userInfo where is_del=' + isDel + '; SELECT * FROM userInfo where is_del=' + isDel + ' limit ' + start + ',10';
 
     conn.query(sql, (err, results) => {
@@ -82,6 +81,7 @@ app.get('/api/getlistdetl20', function(req, res, next){
                 allPage = parseInt(pageStr.split('.')[0]) + 1;
             }
             var userList = results[1];
+            console.log(userList)
             for (val of userList) {
                 if (val.seat) {
                     val.seat = JSON.parse(val.seat)
@@ -108,8 +108,6 @@ app.post('/api/addcard', (req, res) => {
     user.start_time = JSON.stringify(user.start_time)
     user.train_type = JSON.stringify(user.train_type)
     user.user_list = JSON.stringify(user.user_list)
-    console.log(req.body)
-    console.log(user)
     user.create_time = moment().format('YYYY-MM-DD HH:mm:ss')
     const sqlStr = 'insert into userInfo set ?'
     conn.query(sqlStr, user, (err, results) => {
