@@ -82,9 +82,18 @@ app.get('/api/getlistdetl20', function(req, res, next){
                 allPage = parseInt(pageStr.split('.')[0]) + 1;
             }
             var userList = results[1];
-            for (val of userList) {
-                if (val.seat) {
-                    val.seat = JSON.parse(val.seat)
+            for (index of userList) {
+                if (index.seat) {
+                    index.seat = JSON.parse(val.seat)
+                }
+                if (index.start_time) {
+                    index.start_time = JSON.parse(index.start_time)
+                }
+                if (index.train_type) {
+                    index.train_type = JSON.parse(index.train_type)
+                }
+                if (index.user_list) {
+                    index.user_list = JSON.parse(index.user_list)
                 }
             }
             res.end(JSON.stringify({msg:'操作成功！',code:0,totalPages:allPage,currentPage:param.page,num:allCount,data:userList}));
