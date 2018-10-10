@@ -86,6 +86,15 @@ app.get('/api/getlistdetl20', function(req, res, next){
                 if (val.seat) {
                     val.seat = JSON.parse(val.seat)
                 }
+                if (val.start_time) {
+                    val.start_time = JSON.parse(val.start_time)
+                }
+                if (val.train_type) {
+                    val.train_type = JSON.parse(val.train_type)
+                }
+                if (val.user_list) {
+                    val.user_list = JSON.parse(val.user_list)
+                }
             }
             res.end(JSON.stringify({msg:'操作成功！',code:0,totalPages:allPage,currentPage:param.page,num:allCount,data:userList}));
         }
