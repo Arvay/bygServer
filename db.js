@@ -89,6 +89,7 @@ app.get('/api/getlistdetl20', function(req, res, next){
 // 添加数据
 app.post('/api/addcard', (req, res) => {
     const user = req.body
+    console.log(req)
     user.create_time = moment().format('YYYY-MM-DD HH:mm:ss')
     const sqlStr = 'insert into userInfo set ?'
     conn.query(sqlStr, user, (err, results) => {
