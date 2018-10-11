@@ -46,7 +46,7 @@ app.get('/api/getUserInfo', (req, res) => {
     const sqlStr = 'select * from userInfo where id=?'
     conn.query(sqlStr, name, (err, results) => {
         console.log(results)
-        for (val of results.data.data[0]) {
+        for (val of results) {
             if (val.seat) {
                 val.seat = JSON.parse(val.seat)
             }
