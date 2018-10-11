@@ -45,6 +45,20 @@ app.get('/api/getUserInfo', (req, res) => {
     const name = req.query.id
     const sqlStr = 'select * from userInfo where id=?'
     conn.query(sqlStr, name, (err, results) => {
+        for (val of results.data.data) {
+            if (val.seat) {
+                val.seat = JSON.parse(val.seat)
+            }
+            if (val.start_time) {
+                val.start_time = JSON.parse(val.start_time)
+            }
+            if (val.train_type) {
+                val.train_type = JSON.parse(val.train_type)
+            }
+            if (val.user_list) {
+                val.user_list = JSON.parse(val.user_list)
+            }
+        }
         if (err) return res.json({ code: 1, message: '资料不存在', affextedRows: 0 })
         res.json({ code: 0, data: results, affextedRows: results.affextedRows })
     })
@@ -79,7 +93,6 @@ app.get('/api/getlistdetl20', function(req, res, next){
                 allPage = parseInt(pageStr.split('.')[0]) + 1;
             }
             var userList = results[1];
-            console.log(userList)
             for (val of userList) {
                 if (val.seat) {
                     val.seat = JSON.parse(val.seat)
