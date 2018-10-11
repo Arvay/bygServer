@@ -42,8 +42,8 @@ app.post('/api/updataUserInfo', (req, res) => {
 
 // 按条件获取
 app.get('/api/getlistdetl', (req, res) => {
-    const name = req.query.name
-    const sqlStr = 'select * from admin where name=?'
+    const name = req.query.id
+    const sqlStr = 'select * from userInfo where id=?'
     conn.query(sqlStr, name, (err, results) => {
         if (err) return res.json({ code: 1, message: '资料不存在', affextedRows: 0 })
         if (results.length == 0)
