@@ -91,7 +91,7 @@ app.get('/api/getlistdetl20', function(req, res, next){
 
     let sql1 = ' FROM userInfo where is_del=' + isDel + ''
 
-    if (param.user_phone != '' || param.user_phone != null || param.user_phone != undefined) {
+    if (param.user_phone != '' && param.user_phone != null && param.user_phone != undefined) {
         let userPhone = parseInt(param.user_phone)
         sql1 = ' FROM userInfo where is_del=' + isDel + ' and user_phone like "' + userPhone + '%"'
     }
