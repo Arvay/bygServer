@@ -89,6 +89,7 @@ app.get('/api/getlistdetl20', function(req, res, next){
     var start = (param.page - 1) * 10;
     var isDel = parseInt(param.isDel)
 
+
     let sql1 = ' FROM userInfo where is_del=' + isDel + ''
 
     if (param.user_phone != '' && param.user_phone != null && param.user_phone != undefined) {
@@ -98,6 +99,7 @@ app.get('/api/getlistdetl20', function(req, res, next){
 
     if (param.status != '' && param.status != null && param.status != undefined) {
         let status = parseInt(param.status)
+        console.log(status)
         sql1 = ' FROM userInfo where is_del=' + isDel + ' and status="' + status + '"'
     }
 
