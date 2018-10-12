@@ -100,7 +100,7 @@ app.get('/api/getlistdetl20', function(req, res, next){
     if (param.status != '' && param.status != null && param.status != undefined) {
         let status = parseInt(param.status)
         console.log(status)
-        sql1 = ' FROM userInfo where is_del=' + isDel + ' and status="' + status + '"'
+        sql1 = ' FROM userInfo where is_del=' + isDel + ' and status=' + status + ''
     }
 
     var sql = 'SELECT COUNT(*) ' + sql1 + '; SELECT *' + sql1 + ' limit ' + start + ',10';
