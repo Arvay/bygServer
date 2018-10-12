@@ -88,7 +88,15 @@ app.get('/api/getlistdetl20', function(req, res, next){
     }
     var start = (param.page - 1) * 10;
     var isDel = parseInt(param.isDel)
-    var sql = 'SELECT COUNT(*) FROM userInfo where is_del=' + isDel + ' and user_phone like "18%"; SELECT * FROM userInfo where is_del=' + isDel + ' and user_phone like "18%" limit ' + start + ',10';
+
+    let sql1 = ' FROM userInfo where is_del=' + isDel + ''
+
+    if (param.user_phone != '' || param.user_phone != null || param.user_phone != undefined) {
+        let userPhone = parseInt(param.user_phone)
+        sql1 = ' FROM userInfo where is_del=' + isDel + ' and user_phone like "' + userPhone + '%"'
+    }
+
+    var sql = 'SELECT COUNT(*) ' + sql1 + '; SELECT *' + sql1 + ' limit ' + start + ',10';
 
     conn.query(sql, (err, results) => {
         if (err){
