@@ -83,7 +83,7 @@ app.get('/api/getlistdetl20', function(req, res, next){
         param = req.query || req.params;
     }
     if (param.page == '' || param.page == null || param.page == undefined) {
-        if (param.page == 0) {
+        if (param.page < 1) {
             res.end(JSON.stringify({msg:'page从1开始',status:'102'}));
             return;
         }
