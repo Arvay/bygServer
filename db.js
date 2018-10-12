@@ -29,9 +29,9 @@ app.get('/api/getlist', (req, res) => {
 
 //修改数据
 app.post('/api/updataUserInfo', (req, res) => {
-    console.log(req)
-    const sqlStr = 'UPDATE userInfo SET is_del = ? WHERE id = ?'
+    console.log(req.query.includes('isDel'))
     var modsqlparams = [req.query.isDel,req.query.id];
+    const sqlStr = 'UPDATE userInfo SET is_del = ? WHERE id = ?'
     conn.query(sqlStr,modsqlparams, (err,results) => {
         if(err){
             res.json({ code: 0, message: '错误', err: err})
