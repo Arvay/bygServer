@@ -29,9 +29,17 @@ app.get('/api/getlist', (req, res) => {
 
 //修改数据
 app.post('/api/updataUserInfo', (req, res) => {
-    console.log(req.query.includes('isDel'))
-    var modsqlparams = [req.query.isDel,req.query.id];
-    const sqlStr = 'UPDATE userInfo SET is_del = ? WHERE id = ?'
+    var modsqlparams = [];
+    var key = ''
+    if (req.query.isDel) {
+        key = 'isDel'
+        modsqlparams = [req.query.isDel,req.query.id];
+    }
+    if (req.query.status) {
+        key = 'status'
+        modsqlparams = [req.query.status,req.query.id];
+    }
+    const sqlStr = 'UPDATE userInfo SET ' + key + ' = ? WHERE id = ?'
     conn.query(sqlStr,modsqlparams, (err,results) => {
         if(err){
             res.json({ code: 0, message: '错误', err: err})
