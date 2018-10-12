@@ -96,6 +96,11 @@ app.get('/api/getlistdetl20', function(req, res, next){
         sql1 = ' FROM userInfo where is_del=' + isDel + ' and user_phone like "' + userPhone + '%"'
     }
 
+    if (param.status != '' && param.status != null && param.status != undefined) {
+        let status = parseInt(param.status)
+        sql1 = ' FROM userInfo where is_del=' + isDel + ' and status="' + status + '"'
+    }
+
     var sql = 'SELECT COUNT(*) ' + sql1 + '; SELECT *' + sql1 + ' limit ' + start + ',10';
 
     conn.query(sql, (err, results) => {
