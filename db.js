@@ -32,7 +32,7 @@ app.post('/api/updataUserInfo', (req, res) => {
     var modsqlparams = [];
     var key = ''
     if (req.query.isDel) {
-        key = 'isDel'
+        key = 'is_del'
         modsqlparams = [req.query.isDel,req.query.id];
     }
     if (req.query.status) {
