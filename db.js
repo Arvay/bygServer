@@ -88,7 +88,7 @@ app.get('/api/getlistdetl20', function(req, res, next){
     }
     var start = (param.page - 1) * 10;
     var isDel = parseInt(param.isDel)
-    var sql = 'SELECT COUNT(*) FROM userInfo where is_del=' + isDel + ' and refill_phone like "18%"; SELECT * FROM userInfo where is_del=' + isDel + ' and refill_phone like "18%" limit ' + start + ',10';
+    var sql = 'SELECT COUNT(*) FROM userInfo where is_del=' + isDel + ' and user_phone like "18%"; SELECT * FROM userInfo where is_del=' + isDel + ' and user_phone like "18%" limit ' + start + ',10';
 
     conn.query(sql, (err, results) => {
         if (err){
