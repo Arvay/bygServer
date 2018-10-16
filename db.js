@@ -23,7 +23,7 @@ const conn = mysql.createConnection({
 
 // 导出数据
 
-router.get('/api/exportExcel', function(req, res, next) {
+app.get('/api/exportExcel', function(req, res, next) {
     var conf ={};
     conf.stylesXmlFile = "styles.xml";
     conf.name = "mysheet";
