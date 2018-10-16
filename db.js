@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 const moment = require('moment')
+const xlsx = require('node-xlsx')
+
 
 var cors = require('cors')
 app.use(cors())
@@ -10,6 +12,7 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 const mysql = require('mysql')
+
 const conn = mysql.createConnection({
     host: '104.245.42.25',
     user: 'arvay',
@@ -18,6 +21,24 @@ const conn = mysql.createConnection({
     port: '55667',
     multipleStatements: true
 })
+
+// 导出数据
+app.get('/api/getXlsx', (req, res) => {
+    const sqlStr = 'select * from userInfo '
+    conn.query(sqlStr, (err, results) => {
+        if (err) return res.json({ code: 1, message: '资料不存在', affextedRows: 0 })
+        var buffer = xlsx.build(results);
+        fs.writeFile('./resut.xls', buffer, function (err)
+            {
+                if (err)
+                    throw err;
+                var obj = xlsx.parse("./" + "resut.xls");
+                res.json({ code: 0, data: JSON.stringify(obj), affextedRows: results.affextedRows })
+            }
+        )
+    })
+})
+
 // 获取表中所有数据
 app.get('/api/getlist', (req, res) => {
     const sqlStr = 'select * from userInfo '
