@@ -1,8 +1,7 @@
 const express = require('express')
 const app = express()
 const moment = require('moment')
-const xlsx = require('node-xlsx')
-
+var nodeExcel = require('excel-export');
 
 var cors = require('cors')
 app.use(cors())
@@ -23,21 +22,72 @@ const conn = mysql.createConnection({
 })
 
 // 导出数据
-app.get('/api/getXlsx', (req, res) => {
-    const sqlStr = 'select * from userInfo '
-    conn.query(sqlStr, (err, results) => {
-        if (err) return res.json({ code: 1, message: '资料不存在', affextedRows: 0 })
-        var buffer = xlsx.build(results);
-        fs.writeFile('./resut.xls', buffer, function (err)
-            {
-                if (err)
-                    throw err;
-                var obj = xlsx.parse("./" + "resut.xls");
-                res.json({ code: 0, data: JSON.stringify(obj), affextedRows: results.affextedRows })
+
+router.get('/api/exportExcel', function(req, res, next) {
+    var conf ={};
+    conf.stylesXmlFile = "styles.xml";
+    conf.name = "mysheet";
+    conf.cols = [{
+        caption:'string',
+        type:'string',
+        beforeCellWrite:function(row, cellData){
+            return cellData.toUpperCase();
+        },
+        width:28.7109375
+    },{
+        caption:'date',
+        type:'date',
+        beforeCellWrite:function(){
+            var originDate = new Date(Date.UTC(1899,11,30));
+            return function(row, cellData, eOpt){
+                if (eOpt.rowNum%2){
+                    eOpt.styleIndex = 1;
+                }
+                else{
+                    eOpt.styleIndex = 2;
+                }
+                if (cellData === null){
+                    eOpt.cellType = 'string';
+                    return 'N/A';
+                } else
+                    return (cellData - originDate) / (24 * 60 * 60 * 1000);
             }
-        )
-    })
+        }()
+    },{
+        caption:'bool',
+        type:'bool'
+    },{
+        caption:'number',
+        type:'number'
+    }];
+    conf.rows = [
+        ['pi', new Date(Date.UTC(2013, 4, 1)), true, 3.14],
+        ["e", new Date(2012, 4, 1), false, 2.7182],
+        ["M&M<>'", new Date(Date.UTC(2013, 6, 9)), false, 1.61803],
+        ["null date", null, true, 1.414]
+    ];
+    var result = nodeExcel.execute(conf);
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+    res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
+    res.end(result, 'binary');
 })
+
+
+// app.get('/api/getXlsx', (req, res) => {
+//     const sqlStr = 'select * from userInfo '
+//     conn.query(sqlStr, (err, results) => {
+//         if (err) return res.json({ code: 1, message: '资料不存在', affextedRows: 0 })
+//         var buffer = xlsx.build(results);
+//         fs.writeFile('./resut.xls', buffer, function (err)
+//             {
+//                 if (err)
+//                     throw err;
+//                 var obj = xlsx.parse("./" + "resut.xls");
+//                 res.json({ code: 0, data: JSON.stringify(obj), affextedRows: results.affextedRows })
+//             }
+//         )
+//     })
+// })
 
 // 获取表中所有数据
 app.get('/api/getlist', (req, res) => {
