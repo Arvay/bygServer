@@ -12,6 +12,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 const mysql = require('mysql')
 
+let exselInfo = null
+
 const conn = mysql.createConnection({
     host: '104.245.42.25',
     user: 'arvay',
@@ -60,12 +62,7 @@ app.get('/api/exportExcel', function(req, res, next) {
         caption:'number',
         type:'number'
     }];
-    conf.rows = [
-        ['pi', new Date(Date.UTC(2013, 4, 1)), true, 3.14],
-        ["e", new Date(2012, 4, 1), false, 2.7182],
-        ["M&M<>'", new Date(Date.UTC(2013, 6, 9)), false, 1.61803],
-        ["null date", null, true, 1.414]
-    ];
+    conf.rows = exselInfo;
     var result = nodeExcel.execute(conf);
     res.setHeader('Content-Type', 'application/vnd.openxmlformats');
     res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
@@ -73,26 +70,11 @@ app.get('/api/exportExcel', function(req, res, next) {
 })
 
 
-// app.get('/api/getXlsx', (req, res) => {
-//     const sqlStr = 'select * from userInfo '
-//     conn.query(sqlStr, (err, results) => {
-//         if (err) return res.json({ code: 1, message: '资料不存在', affextedRows: 0 })
-//         var buffer = xlsx.build(results);
-//         fs.writeFile('./resut.xls', buffer, function (err)
-//             {
-//                 if (err)
-//                     throw err;
-//                 var obj = xlsx.parse("./" + "resut.xls");
-//                 res.json({ code: 0, data: JSON.stringify(obj), affextedRows: results.affextedRows })
-//             }
-//         )
-//     })
-// })
-
 // 获取表中所有数据
 app.get('/api/getlist', (req, res) => {
     const sqlStr = 'select * from userInfo '
     conn.query(sqlStr, (err, results) => {
+        exselInfo = results
         if (err) return res.json({ code: 1, message: '资料不存在', affextedRows: 0 })
         res.json({ code: 0, data: results, affextedRows: results.affextedRows })
     })
