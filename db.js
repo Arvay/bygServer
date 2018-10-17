@@ -176,7 +176,7 @@ app.get('/api/getlistdetl20', function(req, res, next){
         sql1 = ' FROM userInfo where is_del=' + isDel + ' and status=' + param.status + ''
     }
 
-    var sql = 'SELECT COUNT(*) ' + sql1 + '; SELECT *' + sql1 + ' limit ' + start + ',10';
+    var sql = 'SELECT COUNT(*) ' + sql1 + '; SELECT *' + sql1 + ' Order By create_time desc limit ' + start + ',10';
 
     conn.query(sql, (err, results) => {
         if (err){
