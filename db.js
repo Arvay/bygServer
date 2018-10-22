@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const moment = require('moment')
-var nodeExcel = require('excel-export');
+var nodeExcel = require('excel-export')
 
 var cors = require('cors')
 app.use(cors())
@@ -13,7 +13,6 @@ app.use(bodyParser.json())
 const mysql = require('mysql')
 
 let exselInfo = null
-
 const conn = mysql.createConnection({
     host: '104.245.42.25',
     user: 'arvay',
@@ -23,56 +22,48 @@ const conn = mysql.createConnection({
     multipleStatements: true
 })
 
-// 导出数据
 
-app.get('/api/exportExcel', function(req, res, next) {
-    var conf ={};
-    conf.stylesXmlFile = "styles.xml";
-    conf.name = "mysheet";
-    conf.cols = [{
-        caption:'string',
-        type:'string',
-        beforeCellWrite:function(row, cellData){
-            return cellData
-        },
-        width:28.7109375
-    },{
-        caption:'string',
-        type:'string',
-        beforeCellWrite:function(){
-            var originDate = new Date(Date.UTC(1899,11,30));
-            return function(row, cellData, eOpt){
-                if (eOpt.rowNum%2){
-                    eOpt.styleIndex = 1;
-                }
-                else{
-                    eOpt.styleIndex = 2;
-                }
-                if (cellData === null){
-                    eOpt.cellType = 'string';
-                    return 'N/A';
-                } else
-                    return (cellData - originDate) / (24 * 60 * 60 * 1000);
+/*
+*   导出csv 文件
+* */
+var downLoadUtil = require('./csv');
+app.get('/exportCsv', function(req, res, next) {
+    const sqlStr = 'select * from userInfo '
+    conn.query(sqlStr, (err, results) => {
+        for (var item of results) {
+            item.start_time = JSON.parse(item.start_time)
+            item.seat = JSON.parse(item.seat)
+            item.train_type = JSON.parse(item.train_type)
+            item.status = item.status === 1 ? '已处理' : '未处理'
+            let userList = ''
+            item.user_list = JSON.parse(item.user_list)
+            for (var user of item.user_list) {
+                console.log(user)
+                userList += user.userName + '----' + user.userId + '----' + user.userType + ';'
             }
-        }()
-    },{
-        caption:'string',
-        type:'string'
-    },{
-        caption:'string',
-        type:'string'
-    }];
-    conf.rows = [
-        ['pi', new Date(Date.UTC(2013, 4, 1)), true, 3.14],
-        ["e", new Date(2012, 4, 1), false, 2.7182],
-        ["M&M<>'", new Date(Date.UTC(2013, 6, 9)), false, 1.61803],
-        ["null date", null, true, 1.414]
-    ];
-    console.log(exselInfo)
-    var result = nodeExcel.execute(conf);
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats');
-    res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
-    res.end(result, 'binary');
+            item.user_list = userList
+        }
+
+        if (!err) {
+            downLoadUtil.downLoad(req,res,function(row){
+                return {
+                    "提交时间": crtTimeFtt(row.create_time),
+                    "状态":row.status,
+                    "乘车人信息":row.user_list,
+                    "账号": row.name_12306,
+                    "密码": row.pwd_12306,
+                    "出发地": row.start_site,
+                    "目的地": row.end_site,
+                    "乘车日期": row.start_time,
+                    "乘车时间": row.train_time + '-' + row.end_train_time,
+                    "手机号": row.user_phone,
+                    "席别": row.seat,
+                    '车系': row.train_type,
+                    "备注": row.user_message
+                }
+            },results,'testFile')
+        }
+    })
 })
 
 
@@ -85,7 +76,14 @@ app.get('/api/getlist', (req, res) => {
         res.json({ code: 0, data: results, affextedRows: results.affextedRows })
     })
 })
-
+function getListAll() {
+    const sqlStr = 'select * from userInfo '
+    conn.query(sqlStr, (err, results) => {
+        exselInfo = results
+        console.log("直接打印")
+        console.log(exselInfo)
+    })
+};
 //修改数据
 app.post('/api/updataUserInfo', (req, res) => {
     var modsqlparams = [];
@@ -213,8 +211,30 @@ app.post('/api/addcard', (req, res) => {
     })
 })
 
-// 监听端口
-
+//创建时间格式化显示
+function crtTimeFtt(value,row,index){
+    var crtTime = new Date(value);
+    return dateFtt("yyyy-MM-dd",crtTime);//直接调用公共JS里面的时间类处理的办法
+}
+/**************************************时间格式化处理************************************/
+function dateFtt(fmt,date)
+{
+    var o = {
+        "M+" : date.getMonth()+1,                 //月份
+        "d+" : date.getDate(),                    //日
+        "h+" : date.getHours(),                   //小时
+        "m+" : date.getMinutes(),                 //分
+        "s+" : date.getSeconds(),                 //秒
+        "q+" : Math.floor((date.getMonth()+3)/3), //季度
+        "S"  : date.getMilliseconds()             //毫秒
+    };
+    if(/(y+)/.test(fmt))
+        fmt=fmt.replace(RegExp.$1, (date.getFullYear()+"").substr(4 - RegExp.$1.length));
+    for(var k in o)
+        if(new RegExp("("+ k +")").test(fmt))
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+    return fmt;
+}
 app.listen(3000, () => {
     console.log('正在监听端口3000')
 })
