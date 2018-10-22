@@ -27,7 +27,7 @@ const conn = mysql.createConnection({
 *   导出csv 文件
 * */
 var downLoadUtil = require('./csv');
-app.get('/exportCsv', function(req, res, next) {
+app.get('/api/exportCsv', function(req, res, next) {
     const sqlStr = 'select * from userInfo '
     conn.query(sqlStr, (err, results) => {
         for (var item of results) {
