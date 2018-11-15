@@ -38,7 +38,6 @@ app.get('/api/exportCsv', function(req, res, next) {
             let userList = ''
             item.user_list = JSON.parse(item.user_list)
             for (var user of item.user_list) {
-                console.log(user)
                 userList += user.userName + '----' + user.userId + '----' + user.userType + ';'
             }
             item.user_list = userList
@@ -80,8 +79,6 @@ function getListAll() {
     const sqlStr = 'select * from userInfo '
     conn.query(sqlStr, (err, results) => {
         exselInfo = results
-        console.log("直接打印")
-        console.log(exselInfo)
     })
 };
 //修改数据
@@ -106,12 +103,37 @@ app.post('/api/updataUserInfo', (req, res) => {
     })
 })
 
+// 删除全部
+app.post('/api/delAll', (req, res) => {
+    console.log(req.query)
+    const sqlStr = 'UPDATE userInfo SET is_del = "1" WHERE id in ('+ req.query.idAll +')'
+    conn.query(sqlStr, (err,results) => {
+        if(err){
+            res.json({ code: 0, message: '错误', err: err})
+            return;
+        }
+        res.json({ code: 0, message: '修改成功', data: results })
+    })
+})
+
+// 处理全部
+app.post('/api/updata/status/all', (req, res) => {
+    console.log(req.query)
+    const sqlStr = 'UPDATE userInfo SET status = "1" WHERE id in ('+ req.query.idAll +')'
+    conn.query(sqlStr, (err,results) => {
+        if(err){
+            res.json({ code: 0, message: '错误', err: err})
+            return;
+        }
+        res.json({ code: 0, message: '处理成功', data: results })
+    })
+})
+
 // 按条件获取
 app.get('/api/getUserInfo', (req, res) => {
     const name = req.query.id
     const sqlStr = 'select * from userInfo where id=?'
     conn.query(sqlStr, name, (err, results) => {
-        console.log(results)
         for (val of results) {
             if (val.seat) {
                 val.seat = JSON.parse(val.seat)
