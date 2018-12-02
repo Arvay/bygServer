@@ -153,6 +153,21 @@ app.get('/api/getUserInfo', (req, res) => {
     })
 })
 
+// 登录
+app.get('/api/login', (req, res) => {
+    const name = req.query.name
+    const sqlStr = 'select * from admin where name=?'
+    conn.query(sqlStr, name, (err, results) => {
+        if (results[0] && req.query.password !== results[0].password) {
+            console.log('qweqweq')
+            res.json({ code: 1, message: '密码错误', affextedRows: results.affextedRows })
+            return
+        }
+        if (!results[0]) return res.json({ code: 1, message: '用户不存在', affextedRows: 0 })
+        res.json({ code: 0, data: results, affextedRows: results.affextedRows })
+    })
+})
+
 app.get('/api/getlistdetl20', function(req, res, next){
     res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});//设置response编码为utf-8
     var param = '';
