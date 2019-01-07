@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const moment = require('moment')
 var nodeExcel = require('excel-export')
+var fs = require("fs");
 
 var cors = require('cors')
 app.use(cors())
@@ -28,7 +29,7 @@ const conn = mysql.createConnection({
 * */
 var downLoadUtil = require('./csv');
 app.get('/api/exportCsv', function(req, res, next) {
-    const sqlStr = 'select * from userInfo '
+    const sqlStr = 'select * from userInfo where is_del=0 and status=0'
     conn.query(sqlStr, (err, results) => {
         for (var item of results) {
             item.start_time = JSON.parse(item.start_time)
@@ -65,6 +66,61 @@ app.get('/api/exportCsv', function(req, res, next) {
     })
 })
 
+// 导出txt文件
+app.get('/api/exportTxt', function(req, res, next) {
+    const sqlStr = 'select * from userInfo where is_del=0 and status=0'
+    conn.query(sqlStr, (err, results) => {
+        var postDate = {
+
+        }
+        for (var item of results) {
+            item.start_time = JSON.parse(item.start_time)
+            item.seat = JSON.parse(item.seat)
+            item.train_type = JSON.parse(item.train_type)
+            item.status = item.status === 1 ? '已处理' : '未处理'
+            let userList = ''
+            item.user_list = JSON.parse(item.user_list)
+            for (var user of item.user_list) {
+                userList += user.userName + '----' + user.userId + '----' + user.userType + ';'
+            }
+            item.user_list = userList
+        }
+        var ddd = JSON.stringify(results)
+        console.log(ddd)
+        fs.writeFile('input.txt', ddd,  function(err) {
+            if (err) {
+                return console.error(err);
+            }
+            fs.readFile('input.txt', function (err, data) {
+                if (err) {
+                    return console.error(err);
+                }
+            })
+        })
+        return res.json({ code: 0, data: results })
+
+
+        // if (!err) {
+        //     downLoadUtil.downLoad(req,res,function(row){
+        //         return {
+        //             "提交时间": crtTimeFtt(row.create_time),
+        //             "状态":row.status,
+        //             "乘车人信息":row.user_list,
+        //             "账号": row.name_12306,
+        //             "密码": row.pwd_12306,
+        //             "出发地": row.start_site,
+        //             "目的地": row.end_site,
+        //             "乘车日期": row.start_time,
+        //             "乘车时间": row.train_time + '-' + row.end_train_time,
+        //             "手机号": row.user_phone,
+        //             "席别": row.seat,
+        //             '车系': row.train_type,
+        //             "备注": row.user_message
+        //         }
+        //     },results,'testFile')
+        // }
+    })
+})
 
 // 获取表中所有数据
 app.get('/api/getlist', (req, res) => {
