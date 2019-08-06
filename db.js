@@ -259,7 +259,7 @@ app.get('/api/getlistdetl20', function(req, res, next){
 
     conn.query(sql, (err, results) => {
         if (err){
-            throw err
+            console.log(err)
         }else{
             // 计算总页数
             var allCount = results[0][0]['COUNT(*)'];
@@ -281,7 +281,7 @@ app.get('/api/getlistdetl20', function(req, res, next){
                     val.train_type = JSON.parse(val.train_type)
                 }
                 if (val.user_list) {
-                    val.user_list = JSON.parse(val.user_list)
+                    // val.user_list = JSON.parse(val.user_list)
                 }
             }
             res.end(JSON.stringify({msg:'操作成功！',code:0,totalPages:allPage,currentPage:param.page,num:allCount,data:userList}));
